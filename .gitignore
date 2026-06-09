@@ -1,31 +1,48 @@
-## Ignore Visual Studio SSDT sqlproj specific temporary files, build results, etc
-##
-##
-## Get latest from https://github.com/github/gitignore/blob/master/SSDT-sqlproj.gitignore
-# Build output
-bin/
-obj/
+# SmartSchoolDashboard - .gitignore
 
-# DACPAC files
-*.dacpac
+# Dependencies
 
-# Publish profiles (optional, if environment-specific)
-*.publish.xml
+node_modules/
+**/node_modules/
 
-# SQL Server debug files
-*.dbmdl
-*.sqlcmdvars
+# Next.js
 
-# Visual Studio settings
-.vs/
+frontend/.next/
+frontend/out/
+frontend/build/
 
-# User-specific files
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
+# NestJS
 
-# Backup files
-*.bak
+backend/dist/
+backend/build/
+
+# Environment variables
+
+.env
+.env.local
+.env.development
+.env.production
+
+# Logs
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+
+.DS_Store
+Thumbs.db
+
+# IDE
+
+.vscode/
+.idea/
+
+# Coverage
+
+coverage/
+
+# Optional
+
 *.log
-
