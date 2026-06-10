@@ -11,6 +11,11 @@ export class ClassesController {
   create(@Body() createClassDto: CreateClassDto) {
     return this.classesService.create(createClassDto);
   }
+  
+    @Get('exam')
+      findEmClasses() {
+        return this.classesService.findExamClasses();
+    }
 
   @Get()
   findAll() {
@@ -36,4 +41,5 @@ export class ClassesController {
     getStudents(@Param('id') id: string) {
       return this.classesService.findStudentsByClass(Number(id));
   }
+
 }
