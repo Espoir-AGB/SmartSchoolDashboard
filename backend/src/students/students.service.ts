@@ -1,31 +1,60 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Student } from './entities/student.entity';
+import { Class } from '../classes/entities/class.entity';
 
 @Injectable()
 export class StudentsService {
+  constructor(
+    @InjectRepository(Student)
+    private studentRepo: Repository<Student>,
 
-  //private students = [];
-  private students: any[] = [];
+    @InjectRepository(Class)
+    private classRepo: Repository<Class>,
+  ) {}
 
-  create(data: any) {
-    this.students.push(data);
-    return data;
+  async create(data: any) {
+    if (!data.classId) {
+      throw new BadRequestException('classId is required');
+    }
+    
+    const classExists = await this.classRepo.findOneBy({
+      id: data.classId,
+    });
+
+    if (!classExists) {
+      throw new BadRequestException('Class not found');
+    }
+
+    return this.studentRepo.save({
+      ...data,
+      class: classExists,
+    });
   }
 
   findAll() {
-    return this.students;
+    return this.studentRepo.find({
+      relations: {
+        class: true,
+      },
+    });
   }
 
   findOne(id: number) {
-    return this.students[id];
+    return this.studentRepo.findOne({
+      where: { id },
+      relations: {
+        class: true,
+      },
+    });
   }
 
-  update(id: number, data: any) {
-    this.students[id] = data;
-    return data;
+  update(id: number, data: Partial<Student>) {
+    return this.studentRepo.update(id, data);
   }
 
   remove(id: number) {
-    this.students.splice(id, 1);
-    return { deleted: true };
+    return this.studentRepo.delete(id);
   }
 }
