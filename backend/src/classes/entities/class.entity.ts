@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, ManyToMany } from 'typeorm';
-import { JoinTable } from 'typeorm';
 import { Student } from '../../students/entities/student.entity';
 import { Category } from 'src/categories/entities/category.entity';
 import { Subject } from 'src/subjects/entities/subject.entity';
