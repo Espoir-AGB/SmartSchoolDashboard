@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Student } from '../../students/entities/student.entity';
 import { Subject } from '../../subjects/entities/subject.entity';
 import { Class } from '../../classes/entities/class.entity';
+import { AcademicPeriod } from '../../academic-period/entities/academic-period.entity';
 
 @Entity()
 export class Grade {
@@ -11,17 +12,15 @@ export class Grade {
   @Column('float')
   score!: number;
 
-  @Column()
-  term!: string; // "trim1", "trim2", "trim3"
-
   @ManyToOne(() => Subject, (subject) => subject.grades)
   subject!: Subject;
-  //@ManyToOne(() => Subject)
-  //subject!: Subject;
 
   @ManyToOne(() => Student, (student) => student.grades)
   student!: Student;
 
   @ManyToOne(() => Class)
   class!: Class;
+
+  @ManyToOne(() => AcademicPeriod, (period) => period.grades)
+  period!: AcademicPeriod;
 }
