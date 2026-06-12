@@ -1,6 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, ManyToMany } from 'typeorm';
+import { JoinTable } from 'typeorm';
 import { Student } from '../../students/entities/student.entity';
 import { Category } from 'src/categories/entities/category.entity';
+import { Subject } from 'src/subjects/entities/subject.entity';
 @Entity()
 export class Class {
   @PrimaryGeneratedColumn()
@@ -20,6 +22,9 @@ export class Class {
 
   @ManyToOne(() => Category, (category) => category.classes)
   category!: Category;
+
+  @ManyToMany(() => Subject, (subject) => subject.classes)
+  subjects!: Subject[];
 
   get fullName(): string {
     return this.section ? `${this.level} ${this.section}` : this.level;

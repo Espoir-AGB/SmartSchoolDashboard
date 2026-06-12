@@ -67,4 +67,13 @@ export class ClassesService {
     });
   }
 
+  findSubjectsByClass(classId: number) {
+    return this.classRepo.findOne({
+      where: { id: classId },
+      relations: {
+        subjects: true,
+      },
+    });
+  }
+
 }
