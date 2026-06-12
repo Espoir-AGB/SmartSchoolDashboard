@@ -1,7 +1,7 @@
-import { ManyToOne } from 'typeorm';
+import { ManyToOne, OneToMany } from 'typeorm';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Class } from '../../classes/entities/class.entity';
-
+import { Grade } from 'src/grades/entities/grade.entity';
 @Entity()
 export class Student {
     @PrimaryGeneratedColumn()
@@ -27,4 +27,7 @@ export class Student {
     
     @ManyToOne(() => Class, (classe) => classe.students)
     class!: Class;
+
+    @OneToMany(() => Grade, (grade) => grade.student)
+    grades!: Grade[];
 }
