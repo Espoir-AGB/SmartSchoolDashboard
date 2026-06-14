@@ -5,7 +5,6 @@ import { StudentsModule } from './students/students.module';
 import { ClassesModule } from './classes/classes.module';
 import { CategoriesModule } from './categories/categories.module';
 import { SubjectsModule } from './subjects/subjects.module';
-import { GradesModule } from './grades/grades.module';
 import { AcademicPeriodModule } from './academic-period/academic-period.module';
 import { SchoolModule } from './school/school.module';
 import { EnrollmentModule } from './enrollment/enrollment.module';
@@ -34,8 +33,6 @@ import { SchoolYearModule } from './school-year/school-year.module';
     CategoriesModule,
 
     SubjectsModule,
-
-    GradesModule,
 
     AcademicPeriodModule,
 

@@ -10,21 +10,42 @@ export class CategoriesService {
     private categoryRepo: Repository<Category>,
   ) {}
 
-  create(data: Partial<Category>) {
-    return this.categoryRepo.save(data);
+  create(data: Partial<Category>, schoolId: number) {
+    return this.categoryRepo.save({
+      ...data,
+      school: { id: schoolId },
+    });
   }
 
-  findAll() {
-    return this.categoryRepo.find();
+  findAll(schoolId: number) {
+    return this.categoryRepo.find({
+      where: {
+        school: { id: schoolId },
+      },
+    });
   }
 
   findOne(id: number) {
     return this.categoryRepo.findOne({
       where: { id },
-      relations: { 
-        classes: { students: true, },
-      }
+      relations: {
+        classes: {
+          students: true,
+        },
+        school: true,
+      },
     });
+  }
+
+  async findClasses(id: number) {
+    const category = await this.categoryRepo.findOne({
+      where: { id },
+      relations: {
+        classes: true,
+      },
+    });
+
+    return category?.classes ?? [];
   }
 
   async findStudents(id: number) {
@@ -36,16 +57,7 @@ export class CategoriesService {
         },
       },
     });
-    return category?.classes?.flatMap(c => c.students) ?? [];
-  }
 
-  async findClasses(id: number) {
-    const category = await this.categoryRepo.findOne({
-      where: { id },
-      relations: {
-        classes: true,
-      },
-    });
-    return category?.classes ?? [];
+    return category?.classes?.flatMap(c => c.students) ?? [];
   }
 }

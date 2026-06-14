@@ -51,4 +51,18 @@ export class EnrollmentsService {
       },
     });
   }
+
+  async findStudentsBySchoolYear(schoolYearId: number) {
+    const enrollments = await this.enrollmentRepo.find({
+      where: {
+        schoolYear: { id: schoolYearId },
+      },
+      relations: {
+        student: true,
+        class: true,
+      },
+    });
+
+    return enrollments.map(e => e.student);
+  }
 }

@@ -2,8 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 import { EnrollmentsService } from './enrollment.service';
 
-@Controller('enrollment')
-export class EnrollmentController {
+@Controller('enrollments')
+export class EnrollmentsController {
   constructor(private readonly service: EnrollmentsService) {}
 
   @Post()
@@ -14,5 +14,9 @@ export class EnrollmentController {
   @Get()
   findAll() {
     return this.service.findAll();
+  }
+  @Get('school-year/:id/students')
+    findStudentsBySchoolYear(@Param('id') id: string) {
+      return this.service.findStudentsBySchoolYear(+id);
   }
 }

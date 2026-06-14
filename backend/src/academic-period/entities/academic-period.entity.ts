@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Grade } from '../../grades/entities/grade.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import { SchoolYear } from 'src/school-year/entities/school-year.entity';
 
 @Entity()
 export class AcademicPeriod {
@@ -7,17 +7,18 @@ export class AcademicPeriod {
   id!: number;
 
   @Column()
-  name!: string; // "Trimestre 1", "Devoir 1", "Semestre 1"
+  name!: string; 
+  // "Semestre 1", "Trimestre 1"
 
   @Column()
-  type!: string; // "trimester" | "semester"
+  type!: 'SEMESTER' | 'TRIMESTER';
 
-  @Column({ type: 'date', nullable: true })
-  startDate?: Date;
+  @Column()
+  order!: number; 
+  // 1, 2, 3
 
-  @Column({ type: 'date', nullable: true })
-  endDate?: Date;
-
-  @OneToMany(() => Grade, (grade) => grade.period)
-  grades!: Grade[];
+  @ManyToOne(() => SchoolYear, (year) => year.academicPeriods, {
+    onDelete: 'CASCADE',
+  })
+  schoolYear!: SchoolYear;
 }

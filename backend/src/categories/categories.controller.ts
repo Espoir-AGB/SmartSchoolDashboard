@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 
 @Controller('categories')
@@ -7,12 +7,12 @@ export class CategoriesController {
 
   @Post()
   create(@Body() body: any) {
-    return this.categoriesService.create(body);
+    return this.categoriesService.create(body, body.schoolId);
   }
 
   @Get()
-  findAll() {
-    return this.categoriesService.findAll();
+  findAll(@Query('schoolId') schoolId: string) {
+    return this.categoriesService.findAll(+schoolId);
   }
 
   @Get(':id')
@@ -21,13 +21,12 @@ export class CategoriesController {
   }
 
   @Get(':id/classes')
-    getClasses(@Param('id') id: string) {
-      return this.categoriesService.findClasses(+id);
+  getClasses(@Param('id') id: string) {
+    return this.categoriesService.findClasses(+id);
   }
 
   @Get(':id/students')
-    getStudents(@Param('id') id: string) {
-      return this.categoriesService.findStudents(+id);
+  getStudents(@Param('id') id: string) {
+    return this.categoriesService.findStudents(+id);
   }
-
 }

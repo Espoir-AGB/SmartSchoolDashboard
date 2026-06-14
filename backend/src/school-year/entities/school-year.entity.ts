@@ -1,5 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm';
 import { Enrollment } from 'src/enrollment/entities/enrollment.entity';
+import { AcademicPeriod } from 'src/academic-period/entities/academic-period.entity';
+import { School } from 'src/school/entities/school.entity';
 
 @Entity()
 export class SchoolYear {
@@ -18,6 +20,15 @@ export class SchoolYear {
   @Column({ default: false })
   isCurrent!: boolean;
 
+
+  @ManyToOne(() => School, (school) => school.schoolYears, {
+  onDelete: 'CASCADE',
+  })
+  school!: School;
+    
   @OneToMany(() => Enrollment, (enrollment) => enrollment.schoolYear)
   enrollments!: Enrollment[];
+
+  @OneToMany(() => AcademicPeriod, (period) => period.schoolYear)
+    academicPeriods!: AcademicPeriod[];
 }

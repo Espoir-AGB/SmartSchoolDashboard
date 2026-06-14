@@ -1,13 +1,14 @@
 import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
-import { AcademicPeriodService } from './academic-period.service';
+import { CreateAcademicPeriodDto } from './dto/create-academic-period.dto';
+import { AcademicPeriodsService } from './academic-period.service';
 
-@Controller('periods')
-export class AcademicPeriodController {
-  constructor(private readonly service: AcademicPeriodService) {}
+@Controller('academic-periods')
+export class AcademicPeriodsController {
+  constructor(private readonly service: AcademicPeriodsService) {}
 
   @Post()
-  create(@Body() body: any) {
-    return this.service.create(body);
+  create(@Body() dto: CreateAcademicPeriodDto) {
+    return this.service.create(dto);
   }
 
   @Get()
@@ -15,13 +16,8 @@ export class AcademicPeriodController {
     return this.service.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.service.findOne(+id);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.service.remove(+id);
+  @Get('/:schoolId')
+    findBySchool(@Param('schoolId') id: string) {
+      return this.service.findBySchool(+id);
   }
 }

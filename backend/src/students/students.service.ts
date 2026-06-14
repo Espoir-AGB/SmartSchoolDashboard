@@ -18,9 +18,14 @@ export class StudentsService {
     if (!data.classId) {
       throw new BadRequestException('classId is required');
     }
-    
-    const classExists = await this.classRepo.findOneBy({
-      id: data.classId,
+
+    const classExists = await this.classRepo.findOne({
+      where: { id: data.classId },
+      relations: {
+        category: {
+          school: true,
+        },
+      },
     });
 
     if (!classExists) {
@@ -28,8 +33,14 @@ export class StudentsService {
     }
 
     return this.studentRepo.save({
-      ...data,
-      class: classExists,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      gender: data.gender,
+      birthdate: data.birthdate,
+      matricule: data.matricule,
+      parentPhone: data.parentPhone,
+      class: { id: data.classId },
+      school: classExists.category.school, // automatique
     });
   }
 
@@ -44,6 +55,17 @@ export class StudentsService {
   findOne(id: number) {
     return this.studentRepo.findOne({
       where: { id },
+      relations: {
+        class: true,
+      },
+    });
+  }
+
+ findBySchool(schoolId: number) {
+    return this.studentRepo.find({
+      where: {
+        school: { id: schoolId },
+      },
       relations: {
         class: true,
       },
