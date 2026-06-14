@@ -10,7 +10,7 @@ export class AcademicPeriod {
   name!: string; // "Trimestre 1", "Devoir 1", "Semestre 1"
 
   @Column()
-  type!: string; // "trimester" | "semester" | "exam" | "test"
+  type!: string; // "trimester" | "semester"
 
   @Column({ type: 'date', nullable: true })
   startDate?: Date;

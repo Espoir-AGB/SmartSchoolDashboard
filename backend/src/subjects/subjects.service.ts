@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { Subject } from './entities/subject.entity';
-import { Class } from '../classes/entities/class.entity';
+import { Class } from 'src/classes/entities/class.entity';
+import { CreateSubjectDto } from './dto/create-subject.dto';
+import { UpdateSubjectDto } from './dto/update-subject.dto';
 
 @Injectable()
 export class SubjectsService {
@@ -14,39 +16,62 @@ export class SubjectsService {
     private classRepo: Repository<Class>,
   ) {}
 
-  async create(data: any) {
+  async create(dto: CreateSubjectDto) {
     const classes = await this.classRepo.findBy({
-      id: In(data.classIds),
+      id: In(dto.classIds || []),
     });
 
-    return this.subjectRepo.save({
-      name: data.name,
+    const subject = this.subjectRepo.create({
+      name: dto.name,
       classes,
     });
+
+    return this.subjectRepo.save(subject);
   }
 
   findAll() {
     return this.subjectRepo.find({
       relations: {
-        'classes': true,
+        classes: true,
       },
     });
   }
 
-  findOne(id: number) {
-    return this.subjectRepo.findOne({
+  async findOne(id: number) {
+    const subject = await this.subjectRepo.findOne({
       where: { id },
-      relations: { 
-        'classes': true,
+      relations: {
+        classes: true,
       },
     });
+
+    if (!subject) throw new NotFoundException('Subject not found');
+
+    return subject;
   }
 
-  update(id: number, data: any) {
-    return this.subjectRepo.update(id, data);
+  async update(id: number, dto: UpdateSubjectDto) {
+    const classes = dto.classIds
+      ? await this.classRepo.findBy({ id: In(dto.classIds) })
+      : undefined;
+
+    return this.subjectRepo.save({
+      id,
+      name: dto.name,
+      classes,
+    });
   }
 
   remove(id: number) {
     return this.subjectRepo.delete(id);
+  }
+
+  // 🔥 IMPORTANT ROUTE LOGIC
+  async findByClass(classId: number) {
+    return this.subjectRepo
+      .createQueryBuilder('subject')
+      .leftJoin('subject.classes', 'class')
+      .where('class.id = :classId', { classId })
+      .getMany();
   }
 }

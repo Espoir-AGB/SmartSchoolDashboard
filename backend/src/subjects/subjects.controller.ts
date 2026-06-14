@@ -8,8 +8,8 @@ export class SubjectsController {
   constructor(private readonly subjectsService: SubjectsService) {}
 
   @Post()
-  create(@Body() createSubjectDto: CreateSubjectDto) {
-    return this.subjectsService.create(createSubjectDto);
+  create(@Body() dto: CreateSubjectDto) {
+    return this.subjectsService.create(dto);
   }
 
   @Get()
@@ -23,12 +23,18 @@ export class SubjectsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSubjectDto: UpdateSubjectDto) {
-    return this.subjectsService.update(+id, updateSubjectDto);
+  update(@Param('id') id: string, @Body() dto: UpdateSubjectDto) {
+    return this.subjectsService.update(+id, dto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.subjectsService.remove(+id);
+  }
+
+  // 🔥 IMPORTANT ROUTE
+  @Get('class/:classId')
+  findByClass(@Param('classId') classId: string) {
+    return this.subjectsService.findByClass(+classId);
   }
 }
