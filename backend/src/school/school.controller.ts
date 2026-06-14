@@ -1,0 +1,34 @@
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { SchoolService } from './school.service';
+import { CreateSchoolDto } from './dto/create-school.dto';
+import { UpdateSchoolDto } from './dto/update-school.dto';
+
+@Controller('schools')
+export class SchoolController {
+  constructor(private readonly schoolService: SchoolService) {}
+
+  @Post()
+  create(@Body() dto: CreateSchoolDto) {
+    return this.schoolService.create(dto);
+  }
+
+  @Get()
+  findAll() {
+    return this.schoolService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.schoolService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() dto: UpdateSchoolDto) {
+    return this.schoolService.update(+id, dto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.schoolService.remove(+id);
+  }
+}

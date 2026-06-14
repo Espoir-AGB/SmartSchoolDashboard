@@ -5,6 +5,7 @@ import { Class } from './entities/class.entity';
 import { CreateClassDto } from './dto/create-class.dto';
 import { UpdateClassDto } from './dto/update-class.dto';
 import { Category } from 'src/categories/entities/category.entity';
+import { School } from 'src/school/entities/school.entity';
 
 @Injectable()
 export class ClassesService {
@@ -14,23 +15,27 @@ export class ClassesService {
 
     @InjectRepository(Category)
     private categoryRepo: Repository<Category>,
+
+    @InjectRepository(School)
+    private schoolRepo: Repository<School>,
   ) {}
 
-  async create(data: CreateClassDto) {
-    const category = await this.categoryRepo.findOneBy({
-      id: data.categoryId,
-    });
+  async create(dto: CreateClassDto) {
+    const school = await this.schoolRepo.findOneBy({ id: dto.schoolId });
+    if (!school) throw new Error('School not found');
 
-    if (!category) {
-      throw new BadRequestException('Category not found');
-    }
+    const category = await this.categoryRepo.findOneBy({ id: dto.categoryId });
+    if (!category) throw new Error('Category not found');
 
-    return this.classRepo.save({
-      level: data.level,
-      section: data.section,
-      examClass: data.examClass,
+    const classEntity = this.classRepo.create({
+      level: dto.level,
+      section: dto.section,
+      examClass: dto.examClass,
+      school,
       category,
     });
+
+    return this.classRepo.save(classEntity);
   }
 
   findAll() {
@@ -76,4 +81,15 @@ export class ClassesService {
     });
   }
 
+  findBySchool(schoolId: number) {
+    return this.classRepo.find({
+      where: {
+        school: { id: schoolId },
+      },
+      relations: {
+        school: true,
+        category: true,
+      },
+    });
+  }
 }

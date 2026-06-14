@@ -1,16 +1,8 @@
-import { IsOptional, IsString, IsBoolean, IsNumber } from 'class-validator';
-
 export class CreateClassDto {
-  @IsString()
   level!: string;
-
-  @IsOptional()
-  @IsString()
   section?: string;
+  examClass?: boolean;
 
-  @IsBoolean()
-  examClass!: boolean;
-
-  @IsNumber()
+  schoolId!: number;
   categoryId!: number;
 }

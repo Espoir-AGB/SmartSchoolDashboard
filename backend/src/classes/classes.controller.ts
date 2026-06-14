@@ -46,4 +46,9 @@ export class ClassesController {
     getSubjects(@Param('id') id: string) {
       return this.classesService.findSubjectsByClass(Number(id));
   }
+
+  @Get('school/:schoolId')
+    findBySchool(@Param('schoolId') id: string) {
+      return this.classesService.findBySchool(+id);
+  }
 }

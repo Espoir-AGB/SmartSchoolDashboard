@@ -2,6 +2,8 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, ManyToMan
 import { Student } from '../../students/entities/student.entity';
 import { Category } from 'src/categories/entities/category.entity';
 import { Subject } from 'src/subjects/entities/subject.entity';
+import { School } from 'src/school/entities/school.entity';
+import { Enrollment } from 'src/enrollment/entities/enrollment.entity';
 @Entity()
 export class Class {
   @PrimaryGeneratedColumn()
@@ -15,15 +17,21 @@ export class Class {
 
   @Column({ default: false })
   examClass!: boolean;
-
-  @OneToMany(() => Student, (student) => student.class)
-  students!: Student[];
-
+  
+  @ManyToOne(() => School, (school) => school.classes, { onDelete: 'CASCADE' })
+  school!: School;
+  
   @ManyToOne(() => Category, (category) => category.classes)
   category!: Category;
 
+  @OneToMany(() => Student, (student) => student.class)
+  students!: Student[];
+  
   @ManyToMany(() => Subject, (subject) => subject.classes)
   subjects!: Subject[];
+
+  @OneToMany(() => Enrollment, (enrollment) => enrollment.class)
+  enrollments!: Enrollment[];
 
   get fullName(): string {
     return this.section ? `${this.level} ${this.section}` : this.level;

@@ -2,6 +2,8 @@ import { ManyToOne, OneToMany } from 'typeorm';
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Class } from '../../classes/entities/class.entity';
 import { Grade } from 'src/grades/entities/grade.entity';
+import { School } from 'src/school/entities/school.entity';
+import { Enrollment } from 'src/enrollment/entities/enrollment.entity';
 @Entity()
 export class Student {
     @PrimaryGeneratedColumn()
@@ -30,4 +32,10 @@ export class Student {
 
     @OneToMany(() => Grade, (grade) => grade.student)
     grades!: Grade[];
+
+    @ManyToOne(() => School, (school) => school.students)
+    school!: School;
+
+    @OneToMany(() => Enrollment, (enrollment) => enrollment.student)
+    enrollments!: Enrollment[];
 }
