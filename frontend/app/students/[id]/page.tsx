@@ -1,14 +1,9 @@
 import Link from 'next/link';
 import { studentsApi } from '@/lib/api/students';
-import { classesApi } from '@/lib/api/classes';
 
 export default async function StudentDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-
-  const [student, classes] = await Promise.all([
-    studentsApi.getById(Number(id)).catch(() => null),
-    classesApi.getAll().catch(() => []),
-  ]);
+  const student = await studentsApi.getById(Number(id)).catch(() => null);
 
   if (!student) {
     return (
@@ -20,9 +15,9 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
     );
   }
 
-  const className = classes.find((c) => c.id === student.classId)?.name ?? '—';
-  const initials = `${student.firstName[0]}${student.lastName[0]}`;
   const isMale = student.gender === 'M';
+  const initials = `${student.firstName[0]}${student.lastName[0]}`;
+  const className = student.class ? `${student.class.level} ${student.class.section}` : '—';
 
   return (
     <div style={{ maxWidth: 600 }}>
@@ -45,14 +40,14 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
           </div>
         </div>
 
-        <div style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 0 }}>
           {[
             { label: 'Matricule', value: student.matricule, mono: true },
             { label: 'Classe', value: className },
             { label: 'Date de naissance', value: student.birthdate ? new Date(student.birthdate).toLocaleDateString('fr-FR') : '—' },
             { label: 'Téléphone parent', value: student.parentPhone || '—' },
           ].map((row) => (
-            <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 16, borderBottom: '1px solid var(--border)' }}>
+            <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid var(--border)' }}>
               <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{row.label}</span>
               <span style={{ fontSize: 14, fontWeight: 500, fontFamily: row.mono ? 'monospace' : 'inherit' }}>{row.value}</span>
             </div>

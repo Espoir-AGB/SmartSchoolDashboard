@@ -1,14 +1,8 @@
 import Link from 'next/link';
 import { studentsApi } from '@/lib/api/students';
-import { classesApi } from '@/lib/api/classes';
 
 export default async function StudentsPage() {
-  const [students, classes] = await Promise.all([
-    studentsApi.getAll().catch(() => []),
-    classesApi.getAll().catch(() => []),
-  ]);
-
-  const classMap = Object.fromEntries(classes.map((c) => [c.id, c.name]));
+  const students = await studentsApi.getAll().catch(() => []);
 
   return (
     <div>
@@ -63,10 +57,10 @@ export default async function StudentsPage() {
                     </span>
                   </td>
                   <td style={{ padding: '14px 16px', color: 'var(--text-secondary)', fontSize: 13 }}>
-                    {classMap[student.classId] ?? '—'}
+                    {student.class ? `${student.class.level} ${student.class.section}` : '—'}
                   </td>
                   <td style={{ padding: '14px 16px', color: 'var(--text-secondary)', fontSize: 13 }}>
-                    {student.parentPhone}
+                    {student.parentPhone || '—'}
                   </td>
                   <td style={{ padding: '14px 16px', textAlign: 'right' }}>
                     <Link href={`/students/${student.id}`} style={{ fontSize: 12, color: 'var(--accent-blue)', fontWeight: 500 }}>
