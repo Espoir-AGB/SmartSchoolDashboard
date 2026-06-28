@@ -40,7 +40,7 @@ export default function EditStudentPage({ params }: { params: Promise<{ id: stri
           birthdate: student.birthdate?.slice(0, 10) ?? '',
           matricule: student.matricule,
           parentPhone: student.parentPhone ?? '',
-          classId: String(student.classId),
+          classId: student.class ? String(student.class.id) : '',
         });
       }
       setFetching(false);
@@ -133,7 +133,7 @@ export default function EditStudentPage({ params }: { params: Promise<{ id: stri
           <select style={inputStyle} value={form.classId} onChange={(e) => set('classId', e.target.value)}>
             <option value="">Sélectionner une classe</option>
             {classes.map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
+              <option key={c.id} value={c.id}>{c.level} {c.section}</option>
             ))}
           </select>
         </div>

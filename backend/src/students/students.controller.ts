@@ -1,4 +1,6 @@
-import { Controller, Get, Post, Body, Param, Patch, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Delete, UploadedFile, UseInterceptors, BadRequestException } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ParseFilePipe, FileTypeValidator } from '@nestjs/common';
 import { StudentsService } from './students.service';
 
 @Controller('students')
@@ -8,6 +10,19 @@ export class StudentsController {
   @Post()
   create(@Body() data: any) {
     return this.studentsService.create(data);
+  }
+
+  @Post('import')
+  @UseInterceptors(FileInterceptor('file'))
+  async import(@UploadedFile(
+    new ParseFilePipe({
+      validators: [new FileTypeValidator({ fileType: '.(xlsx|xls|csv)$' })],
+    }),
+  ) file: any) {
+    if (!file) {
+      throw new BadRequestException('Spreadsheet file is required');
+    }
+    return this.studentsService.importFromSpreadsheet(file);
   }
 
   @Get()

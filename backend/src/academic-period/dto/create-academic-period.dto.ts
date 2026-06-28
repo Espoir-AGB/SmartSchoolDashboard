@@ -3,4 +3,6 @@ export class CreateAcademicPeriodDto {
   type!: 'SEMESTER' | 'TRIMESTER';
   order!: number;
   schoolYearId!: number;
+  startDate?: Date;
+  endDate?: Date;
 }

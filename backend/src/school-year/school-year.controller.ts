@@ -3,7 +3,7 @@ import { SchoolYearService } from './school-year.service';
 import { CreateSchoolYearDto } from './dto/create-school-year.dto';
 import { UpdateSchoolYearDto } from './dto/update-school-year.dto';
 
-@Controller('school-year')
+@Controller(['school-year', 'school-years'])
 export class SchoolYearController {
   constructor(private readonly schoolYearService: SchoolYearService) {}
 

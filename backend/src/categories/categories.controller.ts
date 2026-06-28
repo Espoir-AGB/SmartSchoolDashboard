@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, BadRequestException } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 
 @Controller('categories')
@@ -11,8 +11,13 @@ export class CategoriesController {
   }
 
   @Get()
-  findAll(@Query('schoolId') schoolId: string) {
-    return this.categoriesService.findAll(+schoolId);
+  findAll(@Query('schoolId') schoolId?: string) {
+    if (schoolId === undefined) return this.categoriesService.findAll();
+
+    const id = Number(schoolId);
+    if (Number.isNaN(id)) throw new BadRequestException('schoolId must be a number');
+
+    return this.categoriesService.findAll(id);
   }
 
   @Get(':id')

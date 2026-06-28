@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { SchoolYear } from 'src/school-year/entities/school-year.entity';
 
 @Entity()
@@ -16,6 +16,12 @@ export class AcademicPeriod {
   @Column()
   order!: number; 
   // 1, 2, 3
+
+  @Column({ nullable: true })
+  startDate?: Date;
+
+  @Column({ nullable: true })
+  endDate?: Date;
 
   @ManyToOne(() => SchoolYear, (year) => year.academicPeriods, {
     onDelete: 'CASCADE',

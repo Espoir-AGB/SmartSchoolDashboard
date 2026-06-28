@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AcademicPeriod } from './entities/academic-period.entity';
@@ -16,16 +16,34 @@ export class AcademicPeriodsService {
   ) {}
 
   async create(dto: CreateAcademicPeriodDto) {
-    const schoolYear = await this.yearRepo.findOneBy({ id: dto.schoolYearId });
+    const schoolYear = await this.yearRepo.findOne({
+      where: { id: dto.schoolYearId },
+      relations: { school: true },
+    });
 
     if (!schoolYear) {
-      throw new Error('SchoolYear not found');
+      throw new NotFoundException('SchoolYear not found');
+    }
+
+    const school = schoolYear.school;
+    if (school?.academicCycleType && school.academicCycleType !== dto.type) {
+      throw new BadRequestException(
+        `This school is configured for ${school.academicCycleType} periods, so ${dto.type} is not allowed.`,
+      );
+    }
+
+    if (school?.periodsPerYear && dto.order > school.periodsPerYear) {
+      throw new BadRequestException(
+        `Order ${dto.order} exceeds the configured periods per year (${school.periodsPerYear}).`,
+      );
     }
 
     const period = this.repo.create({
       name: dto.name,
       type: dto.type,
       order: dto.order,
+      startDate: dto.startDate,
+      endDate: dto.endDate,
       schoolYear,
     });
 

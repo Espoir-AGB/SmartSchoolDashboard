@@ -9,6 +9,8 @@ import { AcademicPeriodModule } from './academic-period/academic-period.module';
 import { SchoolModule } from './school/school.module';
 import { EnrollmentModule } from './enrollment/enrollment.module';
 import { SchoolYearModule } from './school-year/school-year.module';
+import { GradesModule } from './grades/grades.module';
+import { GradeWeightsModule } from './grade-weights/grade-weights.module';
 
 @Module({
   imports: [
@@ -41,6 +43,10 @@ import { SchoolYearModule } from './school-year/school-year.module';
     EnrollmentModule,
 
     SchoolYearModule,
+
+    GradesModule,
+
+    GradeWeightsModule,
   ],
 })
 export class AppModule {}

@@ -14,6 +14,9 @@ export class Subject {
   @JoinTable()
   classes!: Class[];
 
-  @ManyToOne(() => School, (school) => school.subjects)
-  school!: School;
+  @ManyToOne(() => School, (school) => school.subjects, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  school?: School;
 }

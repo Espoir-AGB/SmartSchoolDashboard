@@ -17,7 +17,11 @@ export class CategoriesService {
     });
   }
 
-  findAll(schoolId: number) {
+  findAll(schoolId?: number) {
+    if (schoolId === undefined) {
+      return this.categoryRepo.find();
+    }
+
     return this.categoryRepo.find({
       where: {
         school: { id: schoolId },

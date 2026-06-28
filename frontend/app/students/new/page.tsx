@@ -104,7 +104,7 @@ export default function NewStudentPage() {
           <select style={inputStyle} value={form.classId} onChange={(e) => set('classId', e.target.value)}>
             <option value="">Sélectionner une classe</option>
             {classes.map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
+              <option key={c.id} value={c.id}>{c.level} {c.section}</option>
             ))}
           </select>
         </div>

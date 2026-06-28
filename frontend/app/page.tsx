@@ -9,6 +9,7 @@ const quickLinks = [
   { label: 'Nouvelle inscription', href: '/enrollments/new', icon: '🔗' },
   { label: 'Gérer les classes', href: '/classes', icon: '🏫' },
   { label: 'Voir les matières', href: '/subjects', icon: '📚' },
+  { label: 'Saisir les notes', href: '/grades', icon: '📝' },
 ];
 
 async function getStats() {
@@ -19,6 +20,7 @@ async function getStats() {
       subjectsApi.getAll(),
       enrollmentsApi.getAll(),
     ]);
+
     return {
       students: students.status === 'fulfilled' ? students.value.length : '—',
       classes: classes.status === 'fulfilled' ? classes.value.length : '—',
